@@ -1,0 +1,77 @@
+const content = document.querySelector('.content');
+const section = document.createElement('section');
+const div = document.createElement('div')
+const apiKey = '54eca79841673640c83f1cd8f1879ef2';
+const cityName = 'Bogota';
+const lenguage = 'en';
+const api = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${apiKey}&units=metric&lang=${lenguage}`;
+
+fetch(api)
+.then(response => {
+  return response.json();
+})
+.then(data => {
+  console.log(data);
+  let sunrise = data.sys.sunrise;
+  let sunset = data.sys.sunset;
+  let up = new Date(sunrise * 1000);
+  let donw = new Date(sunset * 1000);
+  let hour = (a) => ((a.getHours() + 11) % 12 + 1);
+  const icon = `https://s3-us-west-2.amazonaws.com/s.cdpn.io/162656/${data.weather[0]["icon"]}.svg`;
+
+  const markup = `
+  <h1 class="weather-city">${data.name}, ${data.sys.country}</h1>
+  <img class="weather-icon" src="${icon}" alt="${data.weather[0]["main"]}">
+    <h2 class="weather-degree">${Math.trunc(data.main.temp)}°C</h2>
+    <h3 class="weather-info">${data.weather[0].description}</h3>
+  `
+
+  const markupTwo = `
+  <article class="weather-more-container">
+    <span class="fas fa-sun"></span>
+        <h3 class="weather-more-container__title">Amanecer</h3>
+    <p class="weather-more-container__info">${hour(up)}:${up.getMinutes()} AM</p>
+  </article>
+
+<article class="weather-more-container">
+    <span class="fas fa-moon"></span>
+        <h3 class="weather-more-container__title">Atardecer</h3>
+    <p class="weather-more-container__info">${hour(donw)}:${donw.getMinutes()} PM</p>
+  </article>
+
+  <article class="weather-more-container">
+      <span class="fas fa-wind"></span>
+          <h3 class="weather-more-container__title">Viento</h3>
+      <p class="weather-more-container__info">${data.wind.speed} m/seg</p>
+    </article>
+
+ <article class="weather-more-container">
+    <span class="fas fa-thermometer-half"></span>
+        <h3 class="weather-more-container__title">Sensación</h3>
+    <p class="weather-more-container__info">${Math.trunc(data.main.feels_like)} °C</p>
+  </article>
+
+<article class="weather-more-container">
+    <span class="fas fa-tint"></span>
+        <h3 class="weather-more-container__title">Humedad</h3>
+    <p class="weather-more-container__info">${data.main.humidity} %</p>
+  </article>
+
+<article class="weather-more-container">
+  <span class="fas fa-eye"></span>
+      <h3 class="weather-more-container__title">Visibilidad</h3>
+  <p class="weather-more-container__info">${Math.trunc(data.visibility / 1000)} Km</p>
+  </article>
+  `;
+
+    section.innerHTML = markup;
+    section.classList.add('weather');
+    content.appendChild(section);
+    div.innerHTML = markupTwo;
+    div.classList.add('weather-more');
+    content.appendChild(div);
+
+})
+.catch( () => {
+  console.log('no se pudo')
+});
