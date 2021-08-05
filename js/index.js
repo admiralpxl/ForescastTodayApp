@@ -3,9 +3,28 @@ const section = document.createElement('section');
 const div = document.createElement('div')
 const apiKey = '54eca79841673640c83f1cd8f1879ef2';
 const cityName = 'Bogota';
-const lenguage = 'en';
+const lenguage = 'es';
 const api = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${apiKey}&units=metric&lang=${lenguage}`;
 
+const principalMarkup = `
+<h1 class="main-search-title">Forescast Today</h1>
+<form class="main-search-form">
+  <label>
+    <input class="main-search-form__input" type="text" placeholder="Buscar una ciudad">
+    </label>
+  <button class="main-search-form__search" type="submit">
+    <span class="fas fa-search"></span>
+    Buscar</button>
+  <button class="main-search-form__location" type="submit">
+    <span class="fas fa-search-location"></span>
+    Localización actual</button>
+</form>
+`;
+    section.innerHTML = principalMarkup;
+    section.classList.add('main-search');
+    content.appendChild(section);
+
+/*
 fetch(api)
 .then(response => {
   return response.json();
@@ -74,4 +93,5 @@ fetch(api)
 })
 .catch( () => {
   console.log('no se pudo')
-});
+});*/
+
