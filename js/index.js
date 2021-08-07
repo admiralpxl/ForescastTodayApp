@@ -2,11 +2,32 @@ const content = document.querySelector('.content');
 const section = document.createElement('section');
 const div = document.createElement('div')
 const apiKey = '54eca79841673640c83f1cd8f1879ef2';
-const cityName = 'Bogota';
-const lenguage = 'es';
-const api = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${apiKey}&units=metric&lang=${lenguage}`;
+const api = (city, leng) => `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric&lang=${leng}`;
 
-const principalMarkup = `
+
+//Codigo que se ejecuta
+mainScreen();
+const form = document.querySelector('form');
+const input = document.querySelector('input.main-search-form__input');
+const searchByCity = document.querySelector('button.main-search-form__search');
+const searchByLocation = document.querySelector('button.main-search-form__location');
+
+form.addEventListener('submit', e => {
+  e.preventDefault();
+  const cityName = input.value;
+  callApiByName(cityName);
+});
+
+
+
+
+
+
+//Funciones
+
+
+function mainScreen() {
+  const principalMarkup = `
 <h1 class="main-search-title">Forescast Today</h1>
 <form class="main-search-form">
   <label>
@@ -23,9 +44,20 @@ const principalMarkup = `
     section.innerHTML = principalMarkup;
     section.classList.add('main-search');
     content.appendChild(section);
+}
 
-/*
-fetch(api)
+const clear = (zone) => content.removeChild(zone);
+
+function clearAfterWeatherCall() {
+  clear(section);
+  clear(div);
+  section.classList.remove('weather');
+  mainScreen();
+}
+
+
+function callApiByName(city, leng) {
+fetch(api(city, leng))
 .then(response => {
   return response.json();
 })
@@ -64,7 +96,7 @@ fetch(api)
       <p class="weather-more-container__info">${data.wind.speed} m/seg</p>
     </article>
 
- <article class="weather-more-container">
+<article class="weather-more-container">
     <span class="fas fa-thermometer-half"></span>
         <h3 class="weather-more-container__title">Sensación</h3>
     <p class="weather-more-container__info">${Math.trunc(data.main.feels_like)} °C</p>
@@ -92,6 +124,7 @@ fetch(api)
 
 })
 .catch( () => {
-  console.log('no se pudo')
-});*/
+    alert('No se ha encontrado la ciudad');
+});
 
+}
