@@ -5,41 +5,35 @@ const apiKey = '54eca79841673640c83f1cd8f1879ef2';
 const api = (city, leng) => `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric&lang=${leng}`;
 
 
-//Codigo que se ejecuta
+//Main code
 mainScreen();
 const form = document.querySelector('form');
 const input = document.querySelector('input.main-search-form__input');
 const searchByCity = document.querySelector('button.main-search-form__search');
-const searchByLocation = document.querySelector('button.main-search-form__location');
 
 form.addEventListener('submit', e => {
-  e.preventDefault();
-  const cityName = input.value;
-  callApiByName(cityName);
+    e.preventDefault();
+    const cityName = input.value;
+    callApiByName(cityName);
 });
 
 
 
 
 
-
-//Funciones
-
-
+//Function
 function mainScreen() {
   const principalMarkup = `
 <h1 class="main-search-title">Forescast Today</h1>
 <form class="main-search-form">
   <label>
-    <input class="main-search-form__input" type="text" placeholder="Buscar una ciudad">
+    <input class="main-search-form__input" type="text" placeholder="Search a city">
     </label>
   <button class="main-search-form__search" type="submit">
     <span class="fas fa-search"></span>
-    Buscar</button>
-  <button class="main-search-form__location" type="submit">
-    <span class="fas fa-search-location"></span>
-    Localización actual</button>
+    Search</button>
 </form>
+
 `;
     section.innerHTML = principalMarkup;
     section.classList.add('main-search');
@@ -53,16 +47,18 @@ function clearAfterWeatherCall() {
   clear(div);
   section.classList.remove('weather');
   mainScreen();
+  const form = document.querySelector('form');
+  const input = document.querySelector('input.main-search-form__input');
+  const searchByCity = document.querySelector('button.main-search-form__search');
 }
 
 
-function callApiByName(city, leng) {
-fetch(api(city, leng))
+function callApiByName(city) {
+fetch(api(city))
 .then(response => {
   return response.json();
 })
 .then(data => {
-  console.log(data);
   let sunrise = data.sys.sunrise;
   let sunset = data.sys.sunset;
   let up = new Date(sunrise * 1000);
@@ -80,37 +76,37 @@ fetch(api(city, leng))
   const markupTwo = `
   <article class="weather-more-container">
     <span class="fas fa-sun"></span>
-        <h3 class="weather-more-container__title">Amanecer</h3>
+        <h3 class="weather-more-container__title">Sunrise</h3>
     <p class="weather-more-container__info">${hour(up)}:${up.getMinutes()} AM</p>
   </article>
 
 <article class="weather-more-container">
     <span class="fas fa-moon"></span>
-        <h3 class="weather-more-container__title">Atardecer</h3>
+        <h3 class="weather-more-container__title">Sunset</h3>
     <p class="weather-more-container__info">${hour(donw)}:${donw.getMinutes()} PM</p>
   </article>
 
   <article class="weather-more-container">
       <span class="fas fa-wind"></span>
-          <h3 class="weather-more-container__title">Viento</h3>
+          <h3 class="weather-more-container__title">Wind</h3>
       <p class="weather-more-container__info">${data.wind.speed} m/seg</p>
     </article>
 
 <article class="weather-more-container">
     <span class="fas fa-thermometer-half"></span>
-        <h3 class="weather-more-container__title">Sensación</h3>
+        <h3 class="weather-more-container__title">Feel likes</h3>
     <p class="weather-more-container__info">${Math.trunc(data.main.feels_like)} °C</p>
   </article>
 
 <article class="weather-more-container">
     <span class="fas fa-tint"></span>
-        <h3 class="weather-more-container__title">Humedad</h3>
+        <h3 class="weather-more-container__title">Humedity</h3>
     <p class="weather-more-container__info">${data.main.humidity} %</p>
   </article>
 
 <article class="weather-more-container">
   <span class="fas fa-eye"></span>
-      <h3 class="weather-more-container__title">Visibilidad</h3>
+      <h3 class="weather-more-container__title">Visibility</h3>
   <p class="weather-more-container__info">${Math.trunc(data.visibility / 1000)} Km</p>
   </article>
   `;
@@ -124,7 +120,7 @@ fetch(api(city, leng))
 
 })
 .catch( () => {
-    alert('No se ha encontrado la ciudad');
+    alert('Search a valid location');
 });
 
 }
